@@ -78,16 +78,17 @@ router.post('/login', (req, res)=>{
                                 token: "Bearer " + token
                             })
                         })
-
-
                     }
                 })
-
-
             }
         })
 });
 
+
+
+router.get("/current", passport.authenticate('jwt', {session: false}), (req,res) =>{
+    res.json(req.user);
+})
 
 
 
