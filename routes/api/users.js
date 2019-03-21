@@ -9,6 +9,8 @@ const key = require('../../config/keys');
 
 //load input validator
 const validateRegisterInput = require('../../validation/register');
+const validateLoginInput = require('../../validation/login');
+
 //load user model
 const User = require("../../models/User");
 
@@ -23,13 +25,12 @@ router.get("/test", (req, res) =>{
 //@desc     register user
 //@access   public
 router.post('/register', (req, res)=>{
-    const {errors, isValid} = validateRegisterInput(req.body);
 
+    //checking validation
+    const {errors, isValid} = validateRegisterInput(req.body);
     if(!isValid){
         return res.status(400).json(errors)
     }
-
-
     //if the email exists in users collection -> create new user
     User.findOne({email: req.body.email})
        .then(user =>{
@@ -70,31 +71,37 @@ router.post('/register', (req, res)=>{
 //@desc     login user, returning the token
 //@access   public
 router.post('/login', (req, res)=>{
-    const password = req.body.password;
+    const {errors, isValid} = validateLoginInput(req.body);
     const email = req.body.email;
+    const password = req.body.email;
+    if(!isValid){
+        return res.status(400).json(errors)
+    }
 
     User.findOne({email})
         .then(user =>{
             //check if the typed email does exist
             if(!user){
-                return res.status(404).json({msg: "Email not found"});
-            } else{
+                errors.email = "User not found"
+                return res.status(404).json(errors);
+            } 
                 //if exist then check is the password correct
                 bcrypt.compare(password, user.password).then((matching)=>{
-                    if(!matching){
-                        return res.status(400).json({msg: "password incorrect"});
-                    } else {
+                    if(matching){
                         const payload = {id: user.id, name: user.name, avatar: user.avatar};
                         jwt.sign(payload, key.secretOrKey,{expiresIn:3600}, (err, token)=>{
                             res.json({
                                 success: true,
                                 token: "Bearer " + token
-                            })
+                            });
                         })
+                    } else {
+                        errors.password = "Pasword incorrect!"
+                        return res.status(400).json(errors);
                     }
                 })
-            }
-        })
+            
+        });
 });
 
 
