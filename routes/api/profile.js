@@ -1,15 +1,16 @@
 const express =  require("express");
 const router = express.Router();
 const passport = require('passport');
-
-//load User model
+const validateProfileInput = require("../../validation/profile");
 const User = require("../../models/User");
-//load Profile model
 const Profile = require("../../models/Profile");
 
-
+//###ROUTES###
 
 router.get("/test", (req, res) =>  res.send("profile page"));
+
+
+
 
 //@route    GET api/profile/
 //@desc     get current users profile
@@ -32,6 +33,9 @@ router.get("/", passport.authenticate('jwt', {session:false}), (req, res)=>{
 //@desc     route to create new profile
 //@access   private
 router.post("/", passport.authenticate('jwt', {session:false}), (req, res)=>{
+    const {errors, isValid} = validateProfileInput(req.body);
+
+
     const profileFields = {}
     profileFields.user = req.body.id;
     if(req.body.handle) profileFields.handle = req.body.handle;
@@ -52,18 +56,12 @@ router.post("/", passport.authenticate('jwt', {session:false}), (req, res)=>{
     if(req.body.twitter) profileFields.social.twitter = req.body.twitter;
     if(req.body.facebook) profileFields.social.facebook = req.body.facebook;
 
-    
-
-
-
-
-
     Profile.findOne({user: req.body.id}).then(profile => {
         //if the profile already exists => update
             if(profile){
                 
                 Profile.findOneAndUpdate(
-                    {user: req.user.id},
+                    {user: req.user.id}, 
                     {$set: profileFields},
                     {new: true}
                 ).then(profle => res.json(profile))
