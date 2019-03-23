@@ -23,9 +23,7 @@ mongoose
         .then(()=> {console.log("MongoDB connected!")})
         .catch(err=>{console.log(err)});
 
-        app.get("/", (req, res)=>{
-            res.send("Helo");
-        })
+        
         
 app.use("/api/profile", profile);
 app.use("/api/users", users);

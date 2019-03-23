@@ -59,7 +59,7 @@ router.post('/register', (req, res)=>{
                             newUser.save()
                                     .then(user=> res.json(user) )
                                     .catch(err=>console.log(err));
-                        })
+                        });
                })
            }
        })
@@ -72,11 +72,14 @@ router.post('/register', (req, res)=>{
 //@access   public
 router.post('/login', (req, res)=>{
     const {errors, isValid} = validateLoginInput(req.body);
-    const email = req.body.email;
-    const password = req.body.email;
+    
     if(!isValid){
         return res.status(400).json(errors)
+
     }
+
+    const email = req.body.email;
+    const password = req.body.password;
 
     User.findOne({email})
         .then(user =>{
@@ -86,7 +89,7 @@ router.post('/login', (req, res)=>{
                 return res.status(404).json(errors);
             } 
                 //if exist then check is the password correct
-                bcrypt.compare(password, user.password).then((matching)=>{
+                bcrypt.compare(password, user.password).then(matching=>{
                     if(matching){
                         const payload = {id: user.id, name: user.name, avatar: user.avatar};
                         jwt.sign(payload, key.secretOrKey,{expiresIn:3600}, (err, token)=>{
@@ -94,9 +97,9 @@ router.post('/login', (req, res)=>{
                                 success: true,
                                 token: "Bearer " + token
                             });
-                        })
+                        });
                     } else {
-                        errors.password = "Pasword incorrect!"
+                        errors.password = "Pasword incorrect!";
                         return res.status(400).json(errors);
                     }
                 })
