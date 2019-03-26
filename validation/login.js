@@ -2,7 +2,7 @@ const isEmpty = require('./is-empty');
 
 const Validator = require('validator');
 
-module.exports = function validateLoginInput(data){
+module.exports = function validateProfileInput(data){
     //start with empty errors
     let errors = {};
 //if name isn't empty -> is stay like this otherwise its "";
