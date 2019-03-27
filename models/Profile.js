@@ -3,8 +3,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ProfileSchema = new Schema({
+    //association user with the profile
     user:{
         type: Schema.Types.ObjectId,
+        //refers to users collection
         ref: 'users' 
     },
     handle: {
