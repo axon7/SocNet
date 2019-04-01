@@ -12,7 +12,7 @@ module.exports = function validatePostInput(data){
     data.company = !isEmpty(data.company) ? data.company : "";
     data.from = !isEmpty(data.from) ? data.from : "";
 
-    if(Validator.isLength(data.text, {min: 10, max: 250})){
+    if(!Validator.isLength(data.text, {min: 10, max: 250})){
         errors.title = "Please enter text between 10 and 250 characters";
     }  
     
