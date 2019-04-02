@@ -25,4 +25,4 @@ import React, { Component } from 'react'
   }
 }
 
-export default Landing;
+export default Landing
