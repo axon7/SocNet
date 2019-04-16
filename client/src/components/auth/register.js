@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import axios from 'axios';
 import classnames from 'classnames';
+import {connect} from 'react-redux';
+import {registerUser} from '../../actions/authAction';
 class Register extends Component {
   constructor(){
     super()
@@ -31,10 +33,14 @@ class Register extends Component {
       errors: this.state.errors
     }
 
-    axios.post("/api/users/register", newUser)
+    // axios //axios is for request and responses
+    //   .post("/api/users/register", newUser)
+    //   .then(res=> console.log(res.data))
+    //   .catch(err=> this.setState({errors: err.response.data}))
 
-      .then(res=> console.log(res.data))
-      .catch(err=> this.setState({errors: err.response.data}))
+    this.props.registerUser(newUser);
+
+
   }
 
 
@@ -107,4 +113,4 @@ class Register extends Component {
   }
 }
 
-export default Register;
+export default connect(null, {registerUser})(Register);
