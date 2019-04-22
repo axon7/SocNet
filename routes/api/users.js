@@ -25,7 +25,6 @@ router.get("/test", (req, res) =>{
 //@desc     register user
 //@access   public
 router.post('/register', (req, res)=>{
-
     //checking validation
     const {errors, isValid} = validateRegisterInput(req.body);
     if(!isValid){
@@ -67,15 +66,13 @@ router.post('/register', (req, res)=>{
 });
 
 
-//@route    POST api/users/register
+//@route    POST api/users/login
 //@desc     login user, returning the token
 //@access   public
 router.post('/login', (req, res)=>{
     const {errors, isValid} = validateLoginInput(req.body);
-    
     if(!isValid){
         return res.status(400).json(errors)
-
     }
 
     const email = req.body.email;
