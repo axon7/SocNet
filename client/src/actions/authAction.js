@@ -43,8 +43,8 @@ export const setCurrentUser = (decoded) =>{
 }
 
 
-export const logoutUser = () = dispatch =>{
-    localStorage.removeItem(jwtToken);
+export const logoutUser = () => dispatch =>{
+    localStorage.removeItem('jwtToken');
     setAuthToken(false);
     dispatch(setCurrentUser({}))
 
